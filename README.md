@@ -8,3 +8,9 @@ PI: [Nick Holliman](https://www.ncl.ac.uk/computing/people/profile/nickholliman.
 RSE(s): [Mike Simpson](https://www.ncl.ac.uk/digitalinstitute/staff/profile/mikesimpson.html)    
 
 
+## Compiling the Visual
+Open PowerShell and navigate to the visual's folder. Then run:
+
+`pbiviz package`
+
+This will create a .pbiviz file in the dist folder, which can then be imported into Power BI Desktop.
