@@ -1,0 +1,25 @@
+{
+    "visual": {
+        "name": "BlenderVis",
+        "displayName": "Uncertainty Visualisation",
+        "guid": "BlenderVisC9E77F2A70EC4C36A85365ABB882EDF2",
+        "visualClassName": "Visual",
+        "version": "1.0.0",
+        "description": "Displays data with Uncertainty using Blender.",
+        "supportUrl": "www.ncl.ac.uk",
+        "gitHubUrl": ""
+    },
+    "apiVersion": "2.6.0",
+    "author": {
+        "name": "Mike Simpson",
+        "email": "mike.simpson@ncl.ac.uk"
+    },
+    "assets": {
+        "icon": "assets/icon.png"
+    },
+    "externalJS": null,
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": []
+}
