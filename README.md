@@ -8,7 +8,11 @@ PI: [Nick Holliman](https://www.ncl.ac.uk/computing/people/profile/nickholliman.
 RSE(s): [Mike Simpson](https://www.ncl.ac.uk/digitalinstitute/staff/profile/mikesimpson.html)    
 
 ### Testing the Visual
+Using [Power BI Online](https://powerbi.microsoft.com/), go to Settings and enable Developer mode. Edit a report and add a Developer Visual to the report. Navigate to the visual's folder and run:
 
+`pbiviz start`
+
+Which will run the visual on your local computer and make it accessible through Power BI Onlien for testing.
 
 ### Compiling the Visual
 Open PowerShell and navigate to the visual's folder. Then run:
