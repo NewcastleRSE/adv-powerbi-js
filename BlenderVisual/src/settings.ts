@@ -32,8 +32,20 @@ export class CircleSettings {
   public circleColor: string = "white";
   public circleThickness: number = 2;
   public circleLabel: string = "";
-  public fontSize: number = 10;
+  public fontScale: number = 30;
+}
+export class VisualDisplaySettings {
+  public displayMode: string = "graph";
+  public keyLabel: string = "Uncertainty";
+  public keyHighValue: string = "Most Uncertain";
+  public keyLowValue: string = "Least Uncertain";
+}
+export class DataDisplaySettings {
+  public xAxisLabel: string = "";
+  public yAxisLabel: string = "";
 }
 export class VisualSettings extends dataViewObjectsParser.DataViewObjectsParser {
   public circle: CircleSettings = new CircleSettings();
+  public visualDisplaySettings: VisualDisplaySettings = new VisualDisplaySettings();
+  public dataDisplaySettings: DataDisplaySettings = new DataDisplaySettings();
 }
