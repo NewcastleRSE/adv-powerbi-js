@@ -7,6 +7,10 @@ Project: Automating Data Visualisation (Turing)
 PI: [Nick Holliman](https://www.ncl.ac.uk/computing/people/profile/nickholliman.html)  
 RSE(s): [Mike Simpson](https://www.ncl.ac.uk/digitalinstitute/staff/profile/mikesimpson.html)    
 
+### Installing PowerBI Tools
+
+Full instructions [here](https://docs.microsoft.com/en-gb/power-bi/developer/visuals/custom-visual-develop-tutorial)
+
 ### Testing the Visual
 Using [Power BI Online](https://powerbi.microsoft.com/), go to Settings and enable Developer mode. Edit a report and add a Developer Visual to the report. Navigate to the visual's folder and run:
 
