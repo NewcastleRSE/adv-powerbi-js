@@ -8,7 +8,7 @@ PI: [Nick Holliman](https://www.ncl.ac.uk/computing/people/profile/nickholliman.
 RSE(s): [Mike Simpson](https://www.ncl.ac.uk/digitalinstitute/staff/profile/mikesimpson.html)    
 
 ### Installing PowerBI Tools
-
+In order to test the visual (see below) you need to install Power BI tools and the right certificates on your machine.
 Full instructions [here](https://docs.microsoft.com/en-gb/power-bi/developer/visuals/custom-visual-develop-tutorial)
 
 ### Testing the Visual
