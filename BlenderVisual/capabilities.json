@@ -1,9 +1,29 @@
 {
     "dataRoles": [
         {
-            "displayName": "Measure",
-            "name": "measure",
-            "kind": "Measure"
+            "displayName": "x",
+            "name": "x",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "y",
+            "name": "y",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Value",
+            "name": "v",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Uncertainty",
+            "name": "u",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Risk",
+            "name": "r",
+            "kind": "Grouping"
         }
     ],
     "objects": {
@@ -27,8 +47,7 @@
                     "type": {
                         "numeric": true
                     }
-                }
-                ,
+                },
                 "circleLabel": {
                     "displayName": "Circle Label",
                     "description": "The label on the circle.",
@@ -36,7 +55,7 @@
                         "text": true
                     }
                 },
-                "fontSize": {
+                "fontScale": {
                     "displayName": "Label Text Size",
                     "type": {
                         "formatting": {
@@ -45,19 +64,104 @@
                     }
                 }
             }
+        },
+        "visualDisplaySettings": {
+            "displayName": "Visual Settings",
+            "properties": {
+                "displayMode": {
+                    "displayName": "Display Mode",
+                    "description": "Choose whether the visual is displayed as a 2D graph or on a 3D Model (map).",
+                    "type": {
+                        "enumeration": [ 
+                            {
+                                "displayName": "Graph",
+                                "value" : "graph"
+                            },
+                            {
+                                "displayName": "Map",
+                                "value" : "map"
+                            }
+                        ]
+                    }
+                },
+                "keyLabel": {
+                    "displayName": "Key Label",
+                    "description": "The name of the key scale (default \"Uncertainty\").",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "keyHighValue": {
+                    "displayName": "Key High Value",
+                    "description": "The name of the highest key value (default \"Most Uncertain\").",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "keyLowValue": {
+                    "displayName": "Key Low Value",
+                    "description": "The name of the lowest key value (default \"Least Uncertain\").",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
+        "dataDisplaySettings": {
+            "displayName": "Data Settings",
+            "properties": {
+                "xAxisLabel": {
+                    "displayName": "X Axis Label",
+                    "description": "(Optional) Override the Label on the X Axis.",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "yAxisLabel": {
+                    "displayName": "Y Axis Label",
+                    "description": "(Optional) Override the Label on the Y Axis.",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [
         {
             "conditions": [
-                {
-                    "measure": {
-                        "max": 1
-                    }
-                }
+                { "x": { "max": 1 }, "y": { "max": 1 } }
             ],
-            "single": {
-                "role": "measure"
+            "table": {
+                "rows": {
+                    "select": [
+                        {
+                            "for" : {
+                                "in": "x"
+                            }
+                        },
+                        {
+                            "for" : {
+                                "in": "y"
+                            }
+                        },
+                        {
+                            "for" : {
+                                "in": "v"
+                            }
+                        },
+                        {
+                            "for" : {
+                                "in": "u"
+                            }
+                        },
+                        {
+                            "for" : {
+                                "in": "r"
+                            }
+                        }
+                    ]
+                }
             }
         }
     ]
