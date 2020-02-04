@@ -44,25 +44,26 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 export class Visual implements IVisual {
     private host: IVisualHost;
     private svg: Selection<SVGElement>;
-    private container: Selection<SVGElement>;
-    private circle: Selection<SVGElement>;
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
+    private image: Selection<SVGElement>;
 
     private visualSettings: VisualSettings;
 
     constructor(options: VisualConstructorOptions) {
         this.svg = d3.select(options.element)
-            .append('svg')
-            .classed('circleCard', true);
-        this.container = this.svg.append("g")
-            .classed('container', true);
-        this.circle = this.container.append("circle")
-            .classed('circle', true);
-        this.textValue = this.container.append("text")
+            .append('svg');
+        
+        this.textValue = this.svg.append("text")
             .classed("textValue", true);
-        this.textLabel = this.container.append("text")
+        this.textLabel = this.svg.append("text")
             .classed("textLabel", true);
+
+        // this.image = this.svg.append('svg');
+        // this.svg=this.image.append("image")
+        //     .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png")
+        //     .attr("x", -33)
+        //     .attr("y", 0);
     }
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
@@ -72,10 +73,11 @@ export class Visual implements IVisual {
 
     public update(options: VisualUpdateOptions) {
 
+        let dataView: DataView = options.dataViews[0];
+        this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
+
         let width: number = options.viewport.width;
         let height: number = options.viewport.height;
-
-        let dataView: DataView = options.dataViews[0];
 
         // ------------------------- Set up JSON Data
 
@@ -90,14 +92,14 @@ export class Visual implements IVisual {
             if (this.visualSettings) { console.log("m: " + this.visualSettings.visualDisplaySettings.displayMode); }
         }
 
+        this.svg
+            .attr("width",options.viewport.width)
+            .attr("height",options.viewport.height);
+
         // CHECK DATA
 
         let dataCheck = true;
 
-        if (!this.visualSettings) {         // visual settings not initialised (for some reason?)
-            console.log("No VisualSettings Data");
-            dataCheck = false;
-        }
         if (!dataView.metadata.columns[0])
         {                                   // not supplied minumum dataset
             console.log("No Column 0");
@@ -118,6 +120,9 @@ export class Visual implements IVisual {
             console.log("No Column 3");
             dataCheck = false;
         }
+
+        let valueString: string = "OK";
+        let labelString: string = "Data is Good!";
 
         if (dataCheck)
         {
@@ -172,66 +177,29 @@ export class Visual implements IVisual {
                 console.log(json_data);
                 JSON.stringify(json_data);
             }
-
-            let valueString: string = "OK";
-            let fontSizeValue: number = Math.min(width, height) / 6;
-            this.textValue
-                .text(valueString)
-                .attr("x", "50%")
-                .attr("y", "50%")
-                .attr("dy", "0.2em")
-                .attr("text-anchor", "middle")
-                .style("font-size", fontSizeValue + "px");
-
-            let fontSizeLabel: number = fontSizeValue / 3;
-            this.textLabel
-                .text("Data is Good!")
-                .attr("x", "50%")
-                .attr("y", height / 2)
-                .attr("dy", fontSizeValue / 1.5)
-                .attr("text-anchor", "middle")
-                .style("font-size", fontSizeLabel + "px");
         }
         else 
         {
-            let valueString: string = "ERROR";
-            let fontSizeValue: number = Math.min(width, height) / 6;
-            this.textValue
-                .text(valueString)
-                .attr("x", "50%")
-                .attr("y", "50%")
-                .attr("dy", "0.2em")
-                .attr("text-anchor", "middle")
-                .style("font-size", fontSizeValue + "px");
-
-            let fontSizeLabel: number = fontSizeValue / 3;
-            this.textLabel
-                .text("Invalid Data")
-                .attr("x", "50%")
-                .attr("y", height / 2)
-                .attr("dy", fontSizeValue / 1.5)
-                .attr("text-anchor", "middle")
-                .style("font-size", fontSizeLabel + "px");
+            valueString = "ERROR";
+            labelString = "Invalid Data"
         }
 
-        // ---------------------------------------------------------------------- old circle code
+        let fontSizeValue: number = Math.min(width, height) / 6;
+        this.textValue
+            .text(valueString)
+            .attr("x", "50%")
+            .attr("y", "50%")
+            .attr("dy", "0.2em")
+            .attr("text-anchor", "middle")
+            .style("font-size", fontSizeValue + "px");
 
-        this.svg.attr("width", width);
-        this.svg.attr("height", height);
-        let radius: number = Math.min(width, height) / 2.2;
-
-        this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
-
-        this.visualSettings.circle.circleThickness = Math.max(0, this.visualSettings.circle.circleThickness);
-        this.visualSettings.circle.circleThickness = Math.min(10, this.visualSettings.circle.circleThickness);
-
-        this.circle
-            .style("fill", this.visualSettings.circle.circleColor)
-            .style("fill-opacity", 0.5)
-            .style("stroke", "black")
-            .style("stroke-width", this.visualSettings.circle.circleThickness)
-            .attr("r", radius)
-            .attr("cx", width / 2)
-            .attr("cy", height / 2);
+        let fontSizeLabel: number = fontSizeValue / 3;
+        this.textLabel
+            .text(labelString)
+            .attr("x", "50%")
+            .attr("y", height / 2)
+            .attr("dy", fontSizeValue / 1.5)
+            .attr("text-anchor", "middle")
+            .style("font-size", fontSizeLabel + "px");
     }
 }

@@ -28,12 +28,6 @@
 
 import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 
-export class CircleSettings {
-  public circleColor: string = "white";
-  public circleThickness: number = 2;
-  public circleLabel: string = "";
-  public fontScale: number = 30;
-}
 export class VisualDisplaySettings {
   public displayMode: string = "graph";
   public keyLabel: string = "Uncertainty";
@@ -45,7 +39,6 @@ export class DataDisplaySettings {
   public yAxisLabel: string = "";
 }
 export class VisualSettings extends dataViewObjectsParser.DataViewObjectsParser {
-  public circle: CircleSettings = new CircleSettings();
   public visualDisplaySettings: VisualDisplaySettings = new VisualDisplaySettings();
   public dataDisplaySettings: DataDisplaySettings = new DataDisplaySettings();
 }
