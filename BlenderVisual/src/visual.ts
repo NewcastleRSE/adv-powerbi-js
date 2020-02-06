@@ -99,24 +99,9 @@ export class Visual implements IVisual {
 
         let dataCheck = true;
 
-        if (!dataView.metadata.columns[0])
-        {                                   // not supplied minumum dataset
-            console.log("No Column 0");
-            dataCheck = false;
-        }
-        if (!dataView.metadata.columns[1])
-        {                                   // not supplied minumum dataset
-            console.log("No Column 1");
-            dataCheck = false;
-        }
-        if (!dataView.metadata.columns[2])
-        {                                   // not supplied minumum dataset
-            console.log("No Column 2");
-            dataCheck = false;
-        }
-        if (!dataView.metadata.columns[3])
-        {                                   // not supplied minumum dataset
-            console.log("No Column 3");
+        if (!dataView.metadata.columns[3])  // not supplied minumum dataset
+        {                                   
+            //console.log("No Column " + 3);
             dataCheck = false;
         }
 
