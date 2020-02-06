@@ -46,24 +46,23 @@ export class Visual implements IVisual {
     private svg: Selection<SVGElement>;
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
-    private image: Selection<SVGElement>;
-
+    private container: Selection<SVGElement>;
     private visualSettings: VisualSettings;
 
     constructor(options: VisualConstructorOptions) {
         this.svg = d3.select(options.element)
             .append('svg');
-        
-        this.textValue = this.svg.append("text")
-            .classed("textValue", true);
-        this.textLabel = this.svg.append("text")
-            .classed("textLabel", true);
 
-        // this.image = this.svg.append('svg');
-        // this.svg=this.image.append("image")
-        //     .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png")
-        //     .attr("x", -33)
-        //     .attr("y", 0);
+        this.container = this.svg.append('svg')
+        this.svg = this.container.append("image")
+             .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png")
+             .attr("x", 0)
+             .attr("y", 0);
+
+        this.textValue = this.container.append("text")
+             .classed("textValue", true);
+         this.textLabel = this.container.append("text")
+             .classed("textLabel", true);
     }
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
@@ -177,9 +176,15 @@ export class Visual implements IVisual {
                 console.log(json_data);
                 JSON.stringify(json_data);
             }
+
+            this.svg
+                .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png");
         }
         else 
         {
+            this.svg
+                .attr("xlink:href","https://turing-vis-mturk.s3.eu-west-2.amazonaws.com/images/high_0_10.png");
+
             valueString = "ERROR";
             labelString = "Invalid Data"
         }
@@ -191,7 +196,9 @@ export class Visual implements IVisual {
             .attr("y", "50%")
             .attr("dy", "0.2em")
             .attr("text-anchor", "middle")
-            .style("font-size", fontSizeValue + "px");
+            .style("font-size", fontSizeValue + "px")
+            .style("stroke", "black")
+            .style("fill", "white");
 
         let fontSizeLabel: number = fontSizeValue / 3;
         this.textLabel
@@ -200,6 +207,8 @@ export class Visual implements IVisual {
             .attr("y", height / 2)
             .attr("dy", fontSizeValue / 1.5)
             .attr("text-anchor", "middle")
-            .style("font-size", fontSizeLabel + "px");
+            .style("font-size", fontSizeLabel + "px")
+            .style("stroke", "black")
+            .style("fill", "white");
     }
 }
