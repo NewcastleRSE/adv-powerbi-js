@@ -61,7 +61,7 @@ export class Visual implements IVisual {
 
         this.textValue = this.container.append("text")
              .classed("textValue", true);
-         this.textLabel = this.container.append("text")
+        this.textLabel = this.container.append("text")
              .classed("textLabel", true);
     }
 
@@ -162,13 +162,27 @@ export class Visual implements IVisual {
                 JSON.stringify(json_data);
             }
 
-            this.svg
-                .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png");
+            var request = new XMLHttpRequest()
+            request.open('GET', 'http://65.52.229.44:5000/api/v1/render/data', true)
+            request.onload = function() 
+            {
+                console.log("YES Response:");
+                console.log(this.response);
+                //d3.select("bob")
+                //   .attr("xlink:href", this.response);
+            }
         }
         else 
         {
-            this.svg
-                .attr("xlink:href","https://turing-vis-mturk.s3.eu-west-2.amazonaws.com/images/high_0_10.png");
+            var request = new XMLHttpRequest()
+            request.open('GET', 'http://65.52.229.44:5000/api/v1/render/nodata', true)
+            request.onload = function() 
+            {
+                console.log("NO Response:");
+                console.log(this.response);
+                //d3.select("bob")
+                //    .attr("xlink:href", this.response);
+            }
 
             valueString = "ERROR";
             labelString = "Invalid Data"

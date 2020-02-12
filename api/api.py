@@ -17,4 +17,4 @@ def api_data():
 def api_nodata():
     return "https://turing-vis-mturk.s3.eu-west-2.amazonaws.com/images/high_0_10.png";
 	 
-app.run()
+app.run(host='0.0.0.0')
