@@ -3,3 +3,6 @@
 node_modules
 dist
 BlenderVisual/webpack.statistics.dev.html
+BlenderVisual/package-lock.json
+BlenderVisual/package.json
+BlenderVisual/webpack.statistics.dev.html

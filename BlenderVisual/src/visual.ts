@@ -80,7 +80,7 @@ export class Visual implements IVisual {
 
         // ------------------------- Set up JSON Data
 
-        let doLog: boolean = true;
+        let doLog: boolean = false;
 
         if (doLog)
         {
@@ -158,12 +158,13 @@ export class Visual implements IVisual {
                     idx = idx + 1
                 }
 
-                console.log(json_data);
-                JSON.stringify(json_data);
+                //console.log(json_data);
+                //JSON.stringify(json_data);
             }
 
+            console.log("\nSending data good HTTPS request:")
+
             var request = new XMLHttpRequest()
-            request.open('GET', 'http://65.52.229.44:5000/api/v1/render/data', true)
             request.onload = function() 
             {
                 console.log("YES Response:");
@@ -171,11 +172,15 @@ export class Visual implements IVisual {
                 //d3.select("bob")
                 //   .attr("xlink:href", this.response);
             }
+
+            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=good', true)
+            request.send()
         }
         else 
         {
+            console.log("\nSending data bad HTTPS request:")
+
             var request = new XMLHttpRequest()
-            request.open('GET', 'http://65.52.229.44:5000/api/v1/render/nodata', true)
             request.onload = function() 
             {
                 console.log("NO Response:");
@@ -183,6 +188,8 @@ export class Visual implements IVisual {
                 //d3.select("bob")
                 //    .attr("xlink:href", this.response);
             }
+            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=bad', true)
+            request.send()
 
             valueString = "ERROR";
             labelString = "Invalid Data"
