@@ -169,8 +169,8 @@ export class Visual implements IVisual {
             {
                 console.log("YES Response:");
                 console.log(this.response);
-                //d3.select("bob")
-                //   .attr("xlink:href", this.response);
+                d3.select("image")
+                   .attr("xlink:href", this.response);
             }
 
             request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=good', true)
@@ -185,8 +185,8 @@ export class Visual implements IVisual {
             {
                 console.log("NO Response:");
                 console.log(this.response);
-                //d3.select("bob")
-                //    .attr("xlink:href", this.response);
+                d3.select("image")
+                    .attr("xlink:href", this.response);
             }
             request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=bad', true)
             request.send()
