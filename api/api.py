@@ -23,5 +23,5 @@ def api_data():
     resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers['custom-header'] = 'custom'
     return resp; 
-     
+    
 app.run(host='0.0.0.0')

@@ -61,7 +61,7 @@ export class Visual implements IVisual {
 
         this.textValue = this.container.append("text")
              .classed("textValue", true);
-         this.textLabel = this.container.append("text")
+        this.textLabel = this.container.append("text")
              .classed("textLabel", true);
     }
 
@@ -80,7 +80,7 @@ export class Visual implements IVisual {
 
         // ------------------------- Set up JSON Data
 
-        let doLog: boolean = true;
+        let doLog: boolean = false;
 
         if (doLog)
         {
@@ -158,17 +158,38 @@ export class Visual implements IVisual {
                     idx = idx + 1
                 }
 
-                console.log(json_data);
-                JSON.stringify(json_data);
+                //console.log(json_data);
+                //JSON.stringify(json_data);
             }
 
-            this.svg
-                .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png");
+            console.log("\nSending data good HTTPS request:")
+
+            var request = new XMLHttpRequest()
+            request.onload = function() 
+            {
+                console.log("YES Response:");
+                console.log(this.response);
+                d3.select("image")
+                   .attr("xlink:href", this.response);
+            }
+
+            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=good', true)
+            request.send()
         }
         else 
         {
-            this.svg
-                .attr("xlink:href","https://turing-vis-mturk.s3.eu-west-2.amazonaws.com/images/high_0_10.png");
+            console.log("\nSending data bad HTTPS request:")
+
+            var request = new XMLHttpRequest()
+            request.onload = function() 
+            {
+                console.log("NO Response:");
+                console.log(this.response);
+                d3.select("image")
+                    .attr("xlink:href", this.response);
+            }
+            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=bad', true)
+            request.send()
 
             valueString = "ERROR";
             labelString = "Invalid Data"
