@@ -105,8 +105,8 @@ export class Visual implements IVisual {
             dataCheck = false;
         }
 
-        let valueString: string = "OK";
-        let labelString: string = "Data is Good!";
+        let valueString: string = "";
+        let labelString: string = "";
 
         if (dataCheck)
         {
@@ -138,14 +138,41 @@ export class Visual implements IVisual {
                 // populate visualisation data
                 let idx = 0
                 let numRows = dataView.table.rows.length;
+                let numColumns = dataView.table.columns.length;
+
+                let xIndex = 0, yIndex = 1, vIndex = 2, uIndex = 3, rIndex = 4;
+
+                for (let x = 0; x < numColumns; x++)
+                {
+                    if (dataView.metadata.columns[x].roles.x === true)
+                    {
+                        xIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.y === true)
+                    {
+                        yIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.v === true)
+                    {
+                        vIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.u === true)
+                    {
+                        uIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.r === true)
+                    {
+                        rIndex = x;
+                    }
+                }
 
                 for (let x = 0; x < numRows; x++)
                 {
-                    let x_data = dataView.table.rows[idx][0];
-                    let y_data = dataView.table.rows[idx][1];
-                    let value_data = dataView.table.rows[idx][2];
-                    let uncertainty_data = dataView.table.rows[idx][3];
-                    let risk_data = dataView.table.rows[idx][4];
+                    let x_data = dataView.table.rows[idx][xIndex];
+                    let y_data = dataView.table.rows[idx][yIndex];
+                    let value_data = dataView.table.rows[idx][vIndex];
+                    let uncertainty_data = dataView.table.rows[idx][uIndex];
+                    let risk_data = dataView.table.rows[idx][rIndex];
 
                     let j_data = { 'x': x_data, 'y': y_data, 'u': uncertainty_data, 'v': value_data }
                     
@@ -159,40 +186,45 @@ export class Visual implements IVisual {
                 }
 
                 //console.log(json_data);
-                //JSON.stringify(json_data);
+                let json_str = JSON.stringify(json_data);
+
+                //console.log("\nSending HTTPS request:")
+
+                var request = new XMLHttpRequest()
+                request.onload = function() 
+                {
+                    //console.log("YES Response:");
+                    //console.log(this.response);
+                    d3.select("image")
+                        .attr("xlink:href", this.response);
+                    d3.selectAll("text")
+                        .text("");
+                }
+
+                let callStr = 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=' + json_str;
+
+                //console.log(callStr);
+
+                request.open('POST', callStr, true)
+                request.send()
+
+                valueString = "";
+                labelString = "";
             }
 
-            console.log("\nSending data good HTTPS request:")
+            d3.select("image")
+                     .attr("xlink:href", "");
 
-            var request = new XMLHttpRequest()
-            request.onload = function() 
-            {
-                console.log("YES Response:");
-                console.log(this.response);
-                d3.select("image")
-                   .attr("xlink:href", this.response);
-            }
-
-            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=good', true)
-            request.send()
+            valueString = "PLEASE WAIT";
+            labelString = "Render in Progress";
         }
         else 
         {
-            console.log("\nSending data bad HTTPS request:")
-
-            var request = new XMLHttpRequest()
-            request.onload = function() 
-            {
-                console.log("NO Response:");
-                console.log(this.response);
-                d3.select("image")
-                    .attr("xlink:href", this.response);
-            }
-            request.open('GET', 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=bad', true)
-            request.send()
+            d3.select("image")
+                     .attr("xlink:href", "");
 
             valueString = "ERROR";
-            labelString = "Invalid Data"
+            labelString = "Invalid Data";
         }
 
         let fontSizeValue: number = Math.min(width, height) / 6;
