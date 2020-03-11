@@ -27,3 +27,13 @@ This will create a .pbiviz file in the dist folder, which can then be imported i
 
 ### More Instructions
 For more information (including diagrams, screenshots and examples), there is a full tutorial [Here](https://docs.microsoft.com/en-us/power-bi/developer/visuals/custom-visual-develop-tutorial). Part One includes testing instructions and Part Two contains compling instructions.
+
+## The API
+The api will need to be run on a webserver capable of running Blender. Just navigate to the API folder (i.e. in Powershell) and then type 
+
+`python .\api.py` 
+
+This will start the API, which has a single, very simple endpoint.
+
+## Powershell Function
+A Powershell function acts as a proxy between the visual and the api, allowing for HTTPS communication between the two entities.
