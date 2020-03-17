@@ -43,25 +43,29 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 export class Visual implements IVisual {
     private host: IVisualHost;
-    private svg: Selection<SVGElement>;
+    
+    private svgRoot: Selection<SVGElement>;
+    private svg: Selection<SVGElement>;    
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
     private container: Selection<SVGElement>;
     private visualSettings: VisualSettings;
 
     constructor(options: VisualConstructorOptions) {
-        this.svg = d3.select(options.element)
+        this.svgRoot = d3.select(options.element)
             .append('svg');
 
-        this.container = this.svg.append('svg')
-        this.svg = this.container.append("image")
-             .attr("xlink:href","https://turing-vis-blender.s3.eu-west-2.amazonaws.com/myImage.png")
-             .attr("x", 0)
-             .attr("y", 0);
+        this.container = this.svgRoot
+            .append('svg')
 
-        this.textValue = this.container.append("text")
+        this.svg = this.container
+            .append("image")
+            
+        this.textValue = this.container
+            .append("text")
              .classed("textValue", true);
-        this.textLabel = this.container.append("text")
+        this.textLabel = this.container
+            .append("text")
              .classed("textLabel", true);
     }
 
@@ -72,9 +76,11 @@ export class Visual implements IVisual {
 
     public update(options: VisualUpdateOptions) {
 
+        // parse dataView and visual settings
         let dataView: DataView = options.dataViews[0];
         this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
 
+        // get viewport dimensions
         let width: number = options.viewport.width;
         let height: number = options.viewport.height;
 
@@ -90,10 +96,6 @@ export class Visual implements IVisual {
             if (dataView.metadata.columns[1]) {console.log("y: " + dataView.metadata.columns[1].displayName);}
             if (this.visualSettings) { console.log("m: " + this.visualSettings.visualDisplaySettings.displayMode); }
         }
-
-        this.svg
-            .attr("width",options.viewport.width)
-            .attr("height",options.viewport.height);
 
         // CHECK DATA
 
@@ -188,15 +190,13 @@ export class Visual implements IVisual {
                 //console.log(json_data);
                 let json_str = JSON.stringify(json_data);
 
-                //console.log("\nSending HTTPS request:")
-
                 var request = new XMLHttpRequest()
                 request.onload = function() 
                 {
-                    //console.log("YES Response:");
-                    //console.log(this.response);
                     d3.select("image")
-                        .attr("xlink:href", this.response);
+                        .attr("xlink:href", this.response)
+                        .attr("x", 0)
+                        .attr("y", 0);
                     d3.selectAll("text")
                         .text("");
                 }
@@ -227,11 +227,24 @@ export class Visual implements IVisual {
             labelString = "Invalid Data";
         }
 
+        // RENDER
+        this.svgRoot
+            .attr("width", width)
+            .attr("height", height);
+
+        this.svg
+            .attr("width", width)
+            .attr("height", height);
+
+        this.container
+            .attr("width", width)
+            .attr("height", height);
+
         let fontSizeValue: number = Math.min(width, height) / 6;
         this.textValue
             .text(valueString)
-            .attr("x", "50%")
-            .attr("y", "50%")
+            .attr("x", width / 2)
+            .attr("y", height / 2)
             .attr("dy", "0.2em")
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeValue + "px")
@@ -241,7 +254,7 @@ export class Visual implements IVisual {
         let fontSizeLabel: number = fontSizeValue / 3;
         this.textLabel
             .text(labelString)
-            .attr("x", "50%")
+            .attr("x", width / 2)
             .attr("y", height / 2)
             .attr("dy", fontSizeValue / 1.5)
             .attr("text-anchor", "middle")
