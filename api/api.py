@@ -13,6 +13,11 @@ import subprocess
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
+filepath = "D:/nms210/Projects/ADV-PowerBI"
+
+lastCallStr = ""
+lastResult = ""
+
 def upload_to_aws(local_file, bucket, s3_file):
     session = boto3.Session()
     s3 = session.client('s3')
@@ -38,28 +43,37 @@ def home():
 
 @app.route('/api/v1/render/data', methods=['POST'])
 def api_data():   
-    filepath = "D:/nms210/Projects/ADV-PowerBI"
+    global filepath
+    global lastCallStr
+    global lastResult
     
     json_str = request.args.get('data')
-    json_str = json_str.replace('\"', '\\"')
     
-    callStr = "blender \"" + filepath + "//CityModel.blend\" --background -noaudio --use-extension 1 --python \"" + filepath + "//GlyphDataTest.py\" --engine BLENDER_EEVEE --render-output //glyph_json_risk_# -F PNG --render-frame 1 -- " + "\"" + json_str + "\""
-    
-    #print("CALL STRING:")
-    #print(callStr)
-    
-    return_code = subprocess.call(callStr, shell=True)
-    
-    local_file = 'D:/nms210/Projects/ADV-PowerBI/glyph_json_risk_1.png'
-    bucket = 'turing-adv'
-    s3_file_name = ('render_'+randomString()+'.png')
-    uploaded = upload_to_aws(local_file, bucket, s3_file_name)
-    
-    imgurl = "https://turing-adv.s3.eu-west-2.amazonaws.com/" + s3_file_name
+    if (lastCallStr == json_str):               # first check that the dataset is not identical to that used in the previous render
+        print("Duplicate Data Detected")
+        return lastResult;
+    else:                                       # if data has actually changed, render the new image
+        lastCallStr = json_str
+        json_str = json_str.replace('\"', '\\"')
         
-    resp = make_response(imgurl)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers['custom-header'] = 'custom'
-    return resp; 
+        callStr = "blender \"" + filepath + "//CityModel.blend\" --background -noaudio --use-extension 1 --python \"" + filepath + "//GlyphDataTest.py\" --engine BLENDER_EEVEE --render-output //glyph_json_risk_# -F PNG --render-frame 1 -- " + "\"" + json_str + "\""
+        
+        #print("CALL STRING:")
+        #print(callStr)
+        
+        return_code = subprocess.call(callStr, shell=True)
+        
+        local_file = 'D:/nms210/Projects/ADV-PowerBI/glyph_json_risk_1.png'
+        bucket = 'turing-adv'
+        s3_file_name = ('render_'+randomString()+'.png')
+        uploaded = upload_to_aws(local_file, bucket, s3_file_name)
+        
+        imgurl = "https://turing-adv.s3.eu-west-2.amazonaws.com/" + s3_file_name
+            
+        resp = make_response(imgurl)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.headers['custom-header'] = 'custom'
+        lastResult = resp;
+        return resp; 
     
 app.run(host='0.0.0.0')
