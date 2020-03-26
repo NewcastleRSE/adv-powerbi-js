@@ -7,3 +7,5 @@ BlenderVisual/package-lock.json
 BlenderVisual/package.json
 BlenderVisual/webpack.statistics.dev.html
 BlenderVisual/webpack.statistics.dev.html
+*.pyc
+glyph_json_risk_1.png
