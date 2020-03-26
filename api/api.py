@@ -15,8 +15,13 @@ app.config["DEBUG"] = True
 
 filepath = "D:/nms210/Projects/ADV-PowerBI"
 
-lastCallStr = ""
-lastResult = ""
+class Record:
+    def __init__(self, string, result):
+        self.string = string
+        self.result = result
+
+numRecords =  5
+lastCalls = []
 
 def upload_to_aws(local_file, bucket, s3_file):
     session = boto3.Session()
@@ -44,36 +49,43 @@ def home():
 @app.route('/api/v1/render/data', methods=['POST'])
 def api_data():   
     global filepath
-    global lastCallStr
-    global lastResult
+    global numRecords
+    global lastCalls
     
     json_str = request.args.get('data')
     
-    if (lastCallStr == json_str):               # first check that the dataset is not identical to that used in the previous render
-        print("Duplicate Data Detected")
-        return lastResult;
-    else:                                       # if data has actually changed, render the new image
-        lastCallStr = json_str
-        json_str = json_str.replace('\"', '\\"')
+    for lastCall in lastCalls:
+        if (lastCall.string == json_str):               # first check that the dataset is not identical to that used in the previous render
+            print("Duplicate Data Detected")
+            return lastCall.result;
+    
+    lastCallString = json_str                        # if data has actually changed, render the new image
+    json_str = json_str.replace('\"', '\\"')
+    
+    callStr = "blender \"" + filepath + "//CityModel.blend\" --background -noaudio --use-extension 1 --python \"" + filepath + "//GlyphDataTest.py\" --engine BLENDER_EEVEE --render-output //glyph_json_risk_# -F PNG --render-frame 1 -- " + "\"" + json_str + "\""
+    
+    #print("CALL STRING:")
+    #print(callStr)
+    
+    return_code = subprocess.call(callStr, shell=True)
+    
+    local_file = 'D:/nms210/Projects/ADV-PowerBI/glyph_json_risk_1.png'
+    bucket = 'turing-adv'
+    s3_file_name = ('render_'+randomString()+'.png')
+    uploaded = upload_to_aws(local_file, bucket, s3_file_name)
+    
+    imgurl = "https://turing-adv.s3.eu-west-2.amazonaws.com/" + s3_file_name
         
-        callStr = "blender \"" + filepath + "//CityModel.blend\" --background -noaudio --use-extension 1 --python \"" + filepath + "//GlyphDataTest.py\" --engine BLENDER_EEVEE --render-output //glyph_json_risk_# -F PNG --render-frame 1 -- " + "\"" + json_str + "\""
-        
-        #print("CALL STRING:")
-        #print(callStr)
-        
-        return_code = subprocess.call(callStr, shell=True)
-        
-        local_file = 'D:/nms210/Projects/ADV-PowerBI/glyph_json_risk_1.png'
-        bucket = 'turing-adv'
-        s3_file_name = ('render_'+randomString()+'.png')
-        uploaded = upload_to_aws(local_file, bucket, s3_file_name)
-        
-        imgurl = "https://turing-adv.s3.eu-west-2.amazonaws.com/" + s3_file_name
-            
-        resp = make_response(imgurl)
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        resp.headers['custom-header'] = 'custom'
-        lastResult = resp;
-        return resp; 
+    resp = make_response(imgurl)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['custom-header'] = 'custom'
+    
+    if (len(lastCalls) >= numRecords):               # store record for future use
+        del lastCalls[0]
+    
+    lastCall = Record(lastCallString, resp)
+    lastCalls.append(lastCall)
+    
+    return resp; 
     
 app.run(host='0.0.0.0')
