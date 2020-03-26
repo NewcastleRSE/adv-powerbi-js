@@ -13,7 +13,7 @@ import subprocess
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-filepath = "D:/nms210/Projects/ADV-PowerBI"
+filepath = "D:/nms210/Projects/adv-powerbi-js"
 
 class Record:
     def __init__(self, string, result):
@@ -69,7 +69,7 @@ def api_data():
     
     return_code = subprocess.call(callStr, shell=True)
     
-    local_file = 'D:/nms210/Projects/ADV-PowerBI/glyph_json_risk_1.png'
+    local_file = filepath+'/glyph_json_risk_1.png'
     bucket = 'turing-adv'
     s3_file_name = ('render_'+randomString()+'.png')
     uploaded = upload_to_aws(local_file, bucket, s3_file_name)
