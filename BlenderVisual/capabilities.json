@@ -52,22 +52,29 @@
                     }
                 },
                 "keyLabel": {
-                    "displayName": "Key Label",
+                    "displayName": "Uncertainty Key Label",
                     "description": "The name of the key scale (default \"Uncertainty\").",
                     "type": {
                         "text": true
                     }
                 },
                 "keyHighValue": {
-                    "displayName": "Key High Value",
+                    "displayName": "Uncertainty Key High Value",
                     "description": "The name of the highest key value (default \"Most Uncertain\").",
                     "type": {
                         "text": true
                     }
                 },
                 "keyLowValue": {
-                    "displayName": "Key Low Value",
+                    "displayName": "Uncertainty Key Low Value",
                     "description": "The name of the lowest key value (default \"Least Uncertain\").",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "valueKeyLabel": {
+                    "displayName": "(Optional) Value key label",
+                    "description": "The label to be displayed on the value key (default [column name]).",
                     "type": {
                         "text": true
                     }

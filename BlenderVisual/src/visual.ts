@@ -144,6 +144,8 @@ export class Visual implements IVisual {
 
                 let xIndex = 0, yIndex = 1, vIndex = 2, uIndex = 3, rIndex = 4;
 
+                let key_value_name = ""
+
                 for (let x = 0; x < numColumns; x++)
                 {
                     if (dataView.metadata.columns[x].roles.x === true)
@@ -156,6 +158,7 @@ export class Visual implements IVisual {
                     }
                     else if (dataView.metadata.columns[x].roles.v === true)
                     {
+                        key_value_name = dataView.metadata.columns[x].displayName;
                         vIndex = x;
                     }
                     else if (dataView.metadata.columns[x].roles.u === true)
@@ -166,6 +169,15 @@ export class Visual implements IVisual {
                     {
                         rIndex = x;
                     }
+                }
+
+                if (this.visualSettings.visualDisplaySettings.valueKeyLabel == "")
+                {
+                    json_data['value_key_label'] = key_value_name;
+                }
+                else 
+                {
+                    json_data['value_key_label'] = this.visualSettings.visualDisplaySettings.valueKeyLabel;
                 }
 
                 for (let x = 0; x < numRows; x++)

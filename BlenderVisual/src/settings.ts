@@ -33,6 +33,7 @@ export class VisualDisplaySettings {
   public keyLabel: string = "Uncertainty";
   public keyHighValue: string = "Most Uncertain";
   public keyLowValue: string = "Least Uncertain";
+  public valueKeyLabel: string = "";
 }
 export class DataDisplaySettings {
   public xAxisLabel: string = "";
