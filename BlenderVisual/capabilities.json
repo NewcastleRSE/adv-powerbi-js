@@ -1,29 +1,34 @@
 {
     "dataRoles": [
         {
-            "displayName": "x",
+            "displayName": "x (longitude)",
             "name": "x",
-            "kind": "Grouping"
+            "kind": "Grouping",
+            "description": "The x coordinate (for scatter plot) or the longitude (for map plot)."
         },
         {
-            "displayName": "y",
+            "displayName": "y (latitude)",
             "name": "y",
-            "kind": "Grouping"
+            "kind": "Grouping",
+            "description": "The y coordinate (for scatter plot) or the latitude (for map plot)."
         },
         {
             "displayName": "Value",
             "name": "v",
-            "kind": "Grouping"
+            "kind": "Grouping",
+            "description": "Value controls the colour of the inner circle of the glyph."
         },
         {
             "displayName": "Uncertainty",
             "name": "u",
-            "kind": "Grouping"
+            "kind": "Grouping",
+            "description": "Uncertainty defines the visual complexity of the white shape around the glyph edge."
         },
         {
-            "displayName": "Risk",
+            "displayName": "Risk (Optional)",
             "name": "r",
-            "kind": "Grouping"
+            "kind": "Grouping",
+            "description": "Risk affects the size of the glyphs."
         }
     ],
     "objects": {
