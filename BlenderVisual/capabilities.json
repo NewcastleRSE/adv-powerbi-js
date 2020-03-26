@@ -51,6 +51,18 @@
                         ]
                     }
                 },
+                "keyType": {
+                    "displayName": "Key Type",
+                    "description": "Choose the colours and categories to be used by the visualisation.",
+                    "type": {
+                        "enumeration": [ 
+                            {
+                                "displayName": "Met Office Temperature Scale",
+                                "value" : "metTemp"
+                            }
+                        ]
+                    }
+                },
                 "keyLabel": {
                     "displayName": "Uncertainty Key Label",
                     "description": "The name of the key scale (default \"Uncertainty\").",
