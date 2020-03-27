@@ -31,7 +31,7 @@ import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 export class VisualDisplaySettings {
   public displayMode: string = "graph";
   public keyType: string = "metTemp";
-  public keyLabel: string = "Uncertainty";
+  public keyLabel: string = "";
   public keyHighValue: string = "Most Uncertain";
   public keyLowValue: string = "Least Uncertain";
   public valueKeyLabel: string = "";

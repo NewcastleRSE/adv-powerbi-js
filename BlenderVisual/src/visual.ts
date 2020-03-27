@@ -87,7 +87,6 @@ export class Visual implements IVisual {
         // ------------------------- Set up JSON Data
 
         let doLog: boolean = false;
-
         if (doLog)
         {
             console.log("\nSettings:")
@@ -100,37 +99,81 @@ export class Visual implements IVisual {
         // CHECK DATA
 
         let dataCheck = true;
-
-        if (!dataView.metadata.columns[3])  // not supplied minumum dataset
+        if (!dataView.metadata.columns[3])          // not supplied minumum dataset
         {                                   
             //console.log("No Column " + 3);
             dataCheck = false;
         }
 
-        let valueString: string = "";
-        let labelString: string = "";
+        let valueString: string = "";               // "Invalid Data" or "Please Wait"
+        let labelString: string = "";               // Error message or "Render in Progress"
 
         if (dataCheck)
         {
             if (dataView.metadata.columns[0] && dataView.metadata.columns[1] && this.visualSettings)
             {
-                // setup visualistion properties and settings
-                let x_axis_label = dataView.metadata.columns[0].displayName;
-                let y_axis_label = dataView.metadata.columns[1].displayName;
-                
+                // loop through columns to check that indexes are correct 
+                let idx = 0
+                let numRows = dataView.table.rows.length;
+                let numColumns = dataView.table.columns.length;
+
+                let xIndex = 0, yIndex = 1, vIndex = 2, uIndex = 3, rIndex = 4;
+
+                let x_axis_label = ""
+                let y_axis_label = ""
+                let key_value_name = ""
+                let key_label = ""
+
+                for (let x = 0; x < numColumns; x++)
+                {
+                    if (dataView.metadata.columns[x].roles.x === true)
+                    {
+                        x_axis_label = dataView.metadata.columns[x].displayName
+                        xIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.y === true)
+                    {
+                        y_axis_label = dataView.metadata.columns[x].displayName
+                        yIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.v === true)
+                    {
+                        key_value_name = dataView.metadata.columns[x].displayName;
+                        vIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.u === true)
+                    {
+                        key_label = dataView.metadata.columns[x].displayName;
+                        uIndex = x;
+                    }
+                    else if (dataView.metadata.columns[x].roles.r === true)
+                    {
+                        rIndex = x;
+                    }
+                }
+
+                // check for user overrides
                 if (this.visualSettings.dataDisplaySettings.xAxisLabel !== "") {
                     x_axis_label = this.visualSettings.dataDisplaySettings.xAxisLabel;
                 }
                 if (this.visualSettings.dataDisplaySettings.yAxisLabel !== "") {
                     y_axis_label = this.visualSettings.dataDisplaySettings.yAxisLabel;
                 }
+                if (this.visualSettings.visualDisplaySettings.valueKeyLabel !== "") {
+                    key_value_name = this.visualSettings.visualDisplaySettings.valueKeyLabel;
+                }
+                if (this.visualSettings.visualDisplaySettings.valueKeyLabel !== "") {
+                    key_label = this.visualSettings.visualDisplaySettings.keyLabel;
+                }
 
+                // setup visualistion properties and settings
                 let json_data = {
-                    'key_name' : this.visualSettings.visualDisplaySettings.keyLabel,
+                    'key_name' : key_label,
                     'key_values' : { 
                         'high_value' : this.visualSettings.visualDisplaySettings.keyHighValue, 
                         'low_value' : this.visualSettings.visualDisplaySettings.keyLowValue 
                         },
+                    'value_key_label' : key_value_name,
                     'graph_settings' : {
                         'background_colour' : this.visualSettings.graphDisplaySettings.bgColour.substring(1,7),
                         'label_colour' : this.visualSettings.graphDisplaySettings.lblColour.substring(1,7),
@@ -143,50 +186,8 @@ export class Visual implements IVisual {
                     'background' : this.visualSettings.visualDisplaySettings.displayMode,
                     'data' : []
                 }
-                
-                // populate visualisation data
-                let idx = 0
-                let numRows = dataView.table.rows.length;
-                let numColumns = dataView.table.columns.length;
 
-                let xIndex = 0, yIndex = 1, vIndex = 2, uIndex = 3, rIndex = 4;
-
-                let key_value_name = ""
-
-                for (let x = 0; x < numColumns; x++)
-                {
-                    if (dataView.metadata.columns[x].roles.x === true)
-                    {
-                        xIndex = x;
-                    }
-                    else if (dataView.metadata.columns[x].roles.y === true)
-                    {
-                        yIndex = x;
-                    }
-                    else if (dataView.metadata.columns[x].roles.v === true)
-                    {
-                        key_value_name = dataView.metadata.columns[x].displayName;
-                        vIndex = x;
-                    }
-                    else if (dataView.metadata.columns[x].roles.u === true)
-                    {
-                        uIndex = x;
-                    }
-                    else if (dataView.metadata.columns[x].roles.r === true)
-                    {
-                        rIndex = x;
-                    }
-                }
-
-                if (this.visualSettings.visualDisplaySettings.valueKeyLabel == "")
-                {
-                    json_data['value_key_label'] = key_value_name;
-                }
-                else 
-                {
-                    json_data['value_key_label'] = this.visualSettings.visualDisplaySettings.valueKeyLabel;
-                }
-
+                // populate visualsiation data
                 for (let x = 0; x < numRows; x++)
                 {
                     let x_data = dataView.table.rows[idx][xIndex];
@@ -221,7 +222,6 @@ export class Visual implements IVisual {
                 }
 
                 let callStr = 'https://automatingdatavisualisation.azurewebsites.net/datavistest?data=' + json_str;
-
                 //console.log(callStr);
 
                 request.open('POST', callStr, true)
@@ -231,6 +231,7 @@ export class Visual implements IVisual {
                 labelString = "";
             }
 
+            // clear image and display text
             d3.select("image")
                      .attr("xlink:href", "");
 
@@ -239,6 +240,7 @@ export class Visual implements IVisual {
         }
         else 
         {
+            // clear image and display text
             d3.select("image")
                      .attr("xlink:href", "");
 
@@ -246,7 +248,7 @@ export class Visual implements IVisual {
             labelString = "Please provide x, y, value and uncertainty data.";
         }
 
-        // RENDER
+        // render divs and text
         this.svgRoot
             .attr("width", width)
             .attr("height", height);
@@ -267,7 +269,6 @@ export class Visual implements IVisual {
             .attr("dy", "0.2em")
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeValue + "px")
-            //.style("stroke", "black")
             .style("fill", "black");
 
         let fontSizeLabel: number = fontSizeValue / 3;
@@ -278,7 +279,6 @@ export class Visual implements IVisual {
             .attr("dy", fontSizeValue / 1.5)
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeLabel + "px")
-            //.style("stroke", "black")
             .style("fill", "grey");
     }
 }
