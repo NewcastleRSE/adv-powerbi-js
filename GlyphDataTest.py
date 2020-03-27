@@ -82,6 +82,11 @@ y_axis_values = []
 
 properties = None
 
+def hextofloats(h):
+    floats = [int(h[i:i + 2], 16) / 255. for i in (0, 2, 4)]
+    floats.append(1.0)
+    return floats
+
 def drawYAxis(min, max, inc, y_axis_label):
     idx = min;
        
@@ -211,28 +216,24 @@ j_data = json.loads(argv[0])
 values = j_data["data"]
 
 background = j_data["background"]
-
-# LOAD PROPERTIES JSON
-with open("properties.json", 'r') as props:
-    properties = json.load(props)
     
-ax_col = properties["properties"]["axis_colour"]
+ax_col = hextofloats(j_data['graph_settings']['axis_colour'])
 axis_colour = makeEmissive(ax_col, 'AxisMaterial')
 axis_colour = bpy.data.materials['AxisMaterial']
 
-tx_col = properties["properties"]["axis_value_colour"]
+tx_col = hextofloats(j_data['graph_settings']['label_colour'])
 axis_value_colour = makeEmissive(tx_col, 'AxisValueMaterial')
 axis_value_colour = bpy.data.materials['AxisValueMaterial']
 
-ax_col = properties["properties"]["axis_label_colour"]
+ax_col = hextofloats(j_data['graph_settings']['text_colour'])
 axis_label_colour = makeEmissive(ax_col, 'AxisLabelMaterial')
 axis_label_colour = bpy.data.materials['AxisLabelMaterial']
 
-gx_col = properties["properties"]["gridlines_colour"]
+gx_col = hextofloats(j_data['graph_settings']['gridline_colour'])
 gridlines_colour = makeEmissive(gx_col, 'GridlinesMaterial')
 gridlines_colour = bpy.data.materials['GridlinesMaterial']
 
-bg_col = properties["properties"]["background_colour"]      # Background Colour
+bg_col = hextofloats(j_data['graph_settings']['background_colour'])
 bg_colour = makeEmissiveAlpha(bg_col, 'New-BG-Material')
 bg_colour = bpy.data.materials['New-BG-Material']
 bg_colour.blend_method = 'BLEND'
