@@ -131,6 +131,13 @@ export class Visual implements IVisual {
                         'high_value' : this.visualSettings.visualDisplaySettings.keyHighValue, 
                         'low_value' : this.visualSettings.visualDisplaySettings.keyLowValue 
                         },
+                    'graph_settings' : {
+                        'background_colour' : this.visualSettings.graphDisplaySettings.bgColour.substring(1,7),
+                        'label_colour' : this.visualSettings.graphDisplaySettings.lblColour.substring(1,7),
+                        'text_colour' : this.visualSettings.graphDisplaySettings.txtColour.substring(1,7),
+                        'gridline_colour' : this.visualSettings.graphDisplaySettings.gridColour.substring(1,7),
+                        'axis_colour' : this.visualSettings.graphDisplaySettings.axisColour.substring(1,7),
+                    },
                     'x_axis_label' : x_axis_label, 
                     'y_axis_label' : y_axis_label,
                     'background' : this.visualSettings.visualDisplaySettings.displayMode,
@@ -228,15 +235,15 @@ export class Visual implements IVisual {
                      .attr("xlink:href", "");
 
             valueString = "PLEASE WAIT";
-            labelString = "Render in Progress";
+            labelString = "Render in Progress...";
         }
         else 
         {
             d3.select("image")
                      .attr("xlink:href", "");
 
-            valueString = "ERROR";
-            labelString = "Invalid Data";
+            valueString = "INVALID DATA";
+            labelString = "Please provide x, y, value and uncertainty data.";
         }
 
         // RENDER
@@ -252,7 +259,7 @@ export class Visual implements IVisual {
             .attr("width", width)
             .attr("height", height);
 
-        let fontSizeValue: number = Math.min(width, height) / 6;
+        let fontSizeValue: number = Math.min(width, height) / 8;
         this.textValue
             .text(valueString)
             .attr("x", width / 2)
@@ -260,8 +267,8 @@ export class Visual implements IVisual {
             .attr("dy", "0.2em")
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeValue + "px")
-            .style("stroke", "black")
-            .style("fill", "white");
+            //.style("stroke", "black")
+            .style("fill", "black");
 
         let fontSizeLabel: number = fontSizeValue / 3;
         this.textLabel
@@ -271,7 +278,7 @@ export class Visual implements IVisual {
             .attr("dy", fontSizeValue / 1.5)
             .attr("text-anchor", "middle")
             .style("font-size", fontSizeLabel + "px")
-            .style("stroke", "black")
-            .style("fill", "white");
+            //.style("stroke", "black")
+            .style("fill", "grey");
     }
 }

@@ -111,6 +111,66 @@
                     }
                 }
             }
+        },
+        "graphDisplaySettings": {
+            "displayName": "Graph Settings",
+            "properties": {
+                "bgColour": {
+                    "displayName": "Background Color",
+                    "description": "The colour of the background planes of the graph.",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "lblColour": {
+                    "displayName": "Label Color",
+                    "description": "The colour of the axis value labels on the graph.",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "txtColour": {
+                    "displayName": "Text Color",
+                    "description": "The colour of the axis labels and key titles on the graph.",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "gridColour": {
+                    "displayName": "Gridlines Color",
+                    "description": "The colour of the grid lines on the graph",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "axisColour": {
+                    "displayName": "Axis Color",
+                    "description": "The colour of the main axis lines on the graph",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [

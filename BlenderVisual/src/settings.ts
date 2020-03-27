@@ -40,7 +40,15 @@ export class DataDisplaySettings {
   public xAxisLabel: string = "";
   public yAxisLabel: string = "";
 }
+export class GraphDisplaySettings {
+  public bgColour: string = "#D9D9D9";
+  public lblColour: string = "#1A1A1A";
+  public txtColour: string = "#1A1A1A";
+  public gridColour: string = "#333333";
+  public axisColour: string = "#000000";
+}
 export class VisualSettings extends dataViewObjectsParser.DataViewObjectsParser {
   public visualDisplaySettings: VisualDisplaySettings = new VisualDisplaySettings();
   public dataDisplaySettings: DataDisplaySettings = new DataDisplaySettings();
+  public graphDisplaySettings: GraphDisplaySettings = new GraphDisplaySettings();
 }
