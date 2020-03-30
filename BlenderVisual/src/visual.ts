@@ -43,9 +43,9 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 export class Visual implements IVisual {
     private host: IVisualHost;
-    
+
     private svgRoot: Selection<SVGElement>;
-    private svg: Selection<SVGElement>;    
+    private svg: Selection<SVGElement>;
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
     private container: Selection<SVGElement>;
@@ -56,17 +56,18 @@ export class Visual implements IVisual {
             .append('svg');
 
         this.container = this.svgRoot
-            .append('svg')
+            .append('svg');
 
         this.svg = this.container
-            .append("image")
-            
+            .append("image");
+
         this.textValue = this.container
             .append("text")
-             .classed("textValue", true);
+            .classed("textValue", true);
+        
         this.textLabel = this.container
             .append("text")
-             .classed("textLabel", true);
+            .classed("textLabel", true);
     }
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
@@ -87,20 +88,18 @@ export class Visual implements IVisual {
         // ------------------------- Set up JSON Data
 
         let doLog: boolean = false;
-        if (doLog)
-        {
+        if (doLog) {
             console.log("\nSettings:")
             console.log("visual: " + width + " x " + height);
-            if (dataView.metadata.columns[0]) {console.log("x: " + dataView.metadata.columns[0].displayName);}
-            if (dataView.metadata.columns[1]) {console.log("y: " + dataView.metadata.columns[1].displayName);}
+            if (dataView.metadata.columns[0]) { console.log("x: " + dataView.metadata.columns[0].displayName); }
+            if (dataView.metadata.columns[1]) { console.log("y: " + dataView.metadata.columns[1].displayName); }
             if (this.visualSettings) { console.log("m: " + this.visualSettings.visualDisplaySettings.displayMode); }
         }
 
-        // CHECK DATA
-
+        // CHECK DATA                               -- Ensure that the minumum dataset has been provided
         let dataCheck = true;
         if (!dataView.metadata.columns[3])          // not supplied minumum dataset
-        {                                   
+        {
             //console.log("No Column " + 3);
             dataCheck = false;
         }
@@ -108,46 +107,38 @@ export class Visual implements IVisual {
         let valueString: string = "";               // "Invalid Data" or "Please Wait"
         let labelString: string = "";               // Error message or "Render in Progress"
 
-        if (dataCheck)
-        {
-            if (dataView.metadata.columns[0] && dataView.metadata.columns[1] && this.visualSettings)
-            {
+        if (dataCheck) {
+            if (dataView.metadata.columns[0] && dataView.metadata.columns[1] && this.visualSettings) {
                 // loop through columns to check that indexes are correct 
-                let idx = 0
+                let idx = 0;
                 let numRows = dataView.table.rows.length;
                 let numColumns = dataView.table.columns.length;
 
                 let xIndex = 0, yIndex = 1, vIndex = 2, uIndex = 3, rIndex = 4;
 
-                let x_axis_label = ""
-                let y_axis_label = ""
-                let key_value_name = ""
-                let key_label = ""
+                let x_axis_label = "";
+                let y_axis_label = "";
+                let key_value_name = "";
+                let key_label = "";
 
-                for (let x = 0; x < numColumns; x++)
-                {
-                    if (dataView.metadata.columns[x].roles.x === true)
-                    {
+                for (let x = 0; x < numColumns; x++) {
+                    if (dataView.metadata.columns[x].roles.x === true) {
                         x_axis_label = dataView.metadata.columns[x].displayName
                         xIndex = x;
                     }
-                    else if (dataView.metadata.columns[x].roles.y === true)
-                    {
+                    else if (dataView.metadata.columns[x].roles.y === true) {
                         y_axis_label = dataView.metadata.columns[x].displayName
                         yIndex = x;
                     }
-                    else if (dataView.metadata.columns[x].roles.v === true)
-                    {
+                    else if (dataView.metadata.columns[x].roles.v === true) {
                         key_value_name = dataView.metadata.columns[x].displayName;
                         vIndex = x;
                     }
-                    else if (dataView.metadata.columns[x].roles.u === true)
-                    {
+                    else if (dataView.metadata.columns[x].roles.u === true) {
                         key_label = dataView.metadata.columns[x].displayName;
                         uIndex = x;
                     }
-                    else if (dataView.metadata.columns[x].roles.r === true)
-                    {
+                    else if (dataView.metadata.columns[x].roles.r === true) {
                         rIndex = x;
                     }
                 }
@@ -168,28 +159,27 @@ export class Visual implements IVisual {
 
                 // setup visualistion properties and settings
                 let json_data = {
-                    'key_name' : key_label,
-                    'key_values' : { 
-                        'high_value' : this.visualSettings.visualDisplaySettings.keyHighValue, 
-                        'low_value' : this.visualSettings.visualDisplaySettings.keyLowValue 
-                        },
-                    'value_key_label' : key_value_name,
-                    'graph_settings' : {
-                        'background_colour' : this.visualSettings.graphDisplaySettings.bgColour.substring(1,7),
-                        'label_colour' : this.visualSettings.graphDisplaySettings.lblColour.substring(1,7),
-                        'text_colour' : this.visualSettings.graphDisplaySettings.txtColour.substring(1,7),
-                        'gridline_colour' : this.visualSettings.graphDisplaySettings.gridColour.substring(1,7),
-                        'axis_colour' : this.visualSettings.graphDisplaySettings.axisColour.substring(1,7),
+                    'key_name': key_label,
+                    'key_values': {
+                        'high_value': this.visualSettings.visualDisplaySettings.keyHighValue,
+                        'low_value': this.visualSettings.visualDisplaySettings.keyLowValue
                     },
-                    'x_axis_label' : x_axis_label, 
-                    'y_axis_label' : y_axis_label,
-                    'background' : this.visualSettings.visualDisplaySettings.displayMode,
-                    'data' : []
+                    'value_key_label': key_value_name,
+                    'graph_settings': {
+                        'background_colour': this.visualSettings.graphDisplaySettings.bgColour.substring(1, 7),
+                        'label_colour': this.visualSettings.graphDisplaySettings.lblColour.substring(1, 7),
+                        'text_colour': this.visualSettings.graphDisplaySettings.txtColour.substring(1, 7),
+                        'gridline_colour': this.visualSettings.graphDisplaySettings.gridColour.substring(1, 7),
+                        'axis_colour': this.visualSettings.graphDisplaySettings.axisColour.substring(1, 7),
+                    },
+                    'x_axis_label': x_axis_label,
+                    'y_axis_label': y_axis_label,
+                    'background': this.visualSettings.visualDisplaySettings.displayMode,
+                    'data': []
                 }
 
                 // populate visualsiation data
-                for (let x = 0; x < numRows; x++)
-                {
+                for (let x = 0; x < numRows; x++) {
                     let x_data = dataView.table.rows[idx][xIndex];
                     let y_data = dataView.table.rows[idx][yIndex];
                     let value_data = dataView.table.rows[idx][vIndex];
@@ -197,22 +187,20 @@ export class Visual implements IVisual {
                     let risk_data = dataView.table.rows[idx][rIndex];
 
                     let j_data = { 'x': x_data, 'y': y_data, 'u': uncertainty_data, 'v': value_data }
-                    
+
                     if (risk_data != null) {
                         j_data['r'] = risk_data;
                     }
 
                     json_data['data'].push(j_data);
-                    
                     idx = idx + 1
                 }
 
                 //console.log(json_data);
                 let json_str = JSON.stringify(json_data);
 
-                var request = new XMLHttpRequest()
-                request.onload = function() 
-                {
+                var request = new XMLHttpRequest()          // HTTP request, set image to response URL
+                request.onload = function () {
                     d3.select("image")
                         .attr("xlink:href", this.response)
                         .attr("x", 0)
@@ -227,22 +215,21 @@ export class Visual implements IVisual {
                 request.open('POST', callStr, true)
                 request.send()
 
-                valueString = "";
+                valueString = "";           // clear text
                 labelString = "";
             }
 
             // clear image and display text
             d3.select("image")
-                     .attr("xlink:href", "");
+                .attr("xlink:href", "");
 
             valueString = "PLEASE WAIT";
             labelString = "Render in Progress...";
         }
-        else 
-        {
+        else {
             // clear image and display text
             d3.select("image")
-                     .attr("xlink:href", "");
+                .attr("xlink:href", "");
 
             valueString = "INVALID DATA";
             labelString = "Please provide x, y, value and uncertainty data.";
