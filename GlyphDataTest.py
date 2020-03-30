@@ -82,9 +82,9 @@ y_axis_values = []
 
 properties = None
 
-def hextofloats(h):
+def hextofloats(h, a):
     floats = [int(h[i:i + 2], 16) / 255. for i in (0, 2, 4)]
-    floats.append(1.0)
+    floats.append(a)
     return floats
 
 def drawYAxis(min, max, inc, y_axis_label):
@@ -217,23 +217,23 @@ values = j_data["data"]
 
 background = j_data["background"]
     
-ax_col = hextofloats(j_data['graph_settings']['axis_colour'])
+ax_col = hextofloats(j_data['graph_settings']['axis_colour'], 1.0)
 axis_colour = makeEmissive(ax_col, 'AxisMaterial')
 axis_colour = bpy.data.materials['AxisMaterial']
 
-tx_col = hextofloats(j_data['graph_settings']['label_colour'])
+tx_col = hextofloats(j_data['graph_settings']['label_colour'], 1.0)
 axis_value_colour = makeEmissive(tx_col, 'AxisValueMaterial')
 axis_value_colour = bpy.data.materials['AxisValueMaterial']
 
-ax_col = hextofloats(j_data['graph_settings']['text_colour'])
+ax_col = hextofloats(j_data['graph_settings']['text_colour'], 1.0)
 axis_label_colour = makeEmissive(ax_col, 'AxisLabelMaterial')
 axis_label_colour = bpy.data.materials['AxisLabelMaterial']
 
-gx_col = hextofloats(j_data['graph_settings']['gridline_colour'])
+gx_col = hextofloats(j_data['graph_settings']['gridline_colour'], 1.0)
 gridlines_colour = makeEmissive(gx_col, 'GridlinesMaterial')
 gridlines_colour = bpy.data.materials['GridlinesMaterial']
 
-bg_col = hextofloats(j_data['graph_settings']['background_colour'])
+bg_col = hextofloats(j_data['graph_settings']['background_colour'], 0.85)
 bg_colour = makeEmissiveAlpha(bg_col, 'New-BG-Material')
 bg_colour = bpy.data.materials['New-BG-Material']
 bg_colour.blend_method = 'BLEND'
