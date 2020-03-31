@@ -30,6 +30,8 @@ import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 
 export class VisualDisplaySettings {
   public displayMode: string = "graph";
+}
+export class KeyDisplaySettings {
   public keyType: string = "metTemp";
   public keyLabel: string = "";
   public keyHighValue: string = "Most Uncertain";
@@ -49,6 +51,7 @@ export class GraphDisplaySettings {
 }
 export class VisualSettings extends dataViewObjectsParser.DataViewObjectsParser {
   public visualDisplaySettings: VisualDisplaySettings = new VisualDisplaySettings();
+  public keyDisplaySettings: KeyDisplaySettings = new KeyDisplaySettings();
   public dataDisplaySettings: DataDisplaySettings = new DataDisplaySettings();
   public graphDisplaySettings: GraphDisplaySettings = new GraphDisplaySettings();
 }

@@ -150,19 +150,19 @@ export class Visual implements IVisual {
                 if (this.visualSettings.dataDisplaySettings.yAxisLabel !== "") {
                     y_axis_label = this.visualSettings.dataDisplaySettings.yAxisLabel;
                 }
-                if (this.visualSettings.visualDisplaySettings.valueKeyLabel !== "") {
-                    key_value_name = this.visualSettings.visualDisplaySettings.valueKeyLabel;
+                if (this.visualSettings.keyDisplaySettings.valueKeyLabel !== "") {
+                    key_value_name = this.visualSettings.keyDisplaySettings.valueKeyLabel;
                 }
-                if (this.visualSettings.visualDisplaySettings.valueKeyLabel !== "") {
-                    key_label = this.visualSettings.visualDisplaySettings.keyLabel;
+                if (this.visualSettings.keyDisplaySettings.valueKeyLabel !== "") {
+                    key_label = this.visualSettings.keyDisplaySettings.keyLabel;
                 }
 
                 // setup visualistion properties and settings
                 let json_data = {
                     'key_name': key_label,
                     'key_values': {
-                        'high_value': this.visualSettings.visualDisplaySettings.keyHighValue,
-                        'low_value': this.visualSettings.visualDisplaySettings.keyLowValue
+                        'high_value': this.visualSettings.keyDisplaySettings.keyHighValue,
+                        'low_value': this.visualSettings.keyDisplaySettings.keyLowValue
                     },
                     'value_key_label': key_value_name,
                     'graph_settings': {
