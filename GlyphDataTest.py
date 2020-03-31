@@ -30,7 +30,7 @@ from Glyph import Glyph
 from Glyph import createGlyph
 from Glyph import initGlyph
 
-from KeyTemperature import drawKeyTemperature
+from Key import drawKey
 
 from latlonTOukng import WGS84toOSGB36
 
@@ -322,7 +322,7 @@ if background == "graph":
     drawXAxis(min_x, max_x, x_inc, j_data["x_axis_label"])
     drawYAxis(min_y, max_y, y_inc, j_data["y_axis_label"])
 
-drawKeyTemperature(0.0, ortho, axis_value_colour)
+drawKey(0.0, ortho, axis_value_colour)
 
 if background == "map":
     bpy.context.window.scene = bpy.data.scenes['Scene']

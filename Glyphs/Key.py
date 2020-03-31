@@ -28,7 +28,7 @@ from Glyph import initGlyph
 # Code from here
 #
 
-def drawKeyTemperature(average, ortho, text_material):
+def drawKey(average, ortho, text_material):
 
     # copy camera collection    
     cam_x = bpy.context.scene.camera.location[0]
