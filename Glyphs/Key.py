@@ -19,16 +19,13 @@ from MetOffice import metOfficeColours
 from Glyph import Glyph
 from Glyph import createGlyph
 from Glyph import initGlyph
-
-from Glyph import Glyph
-from Glyph import createGlyph
-from Glyph import initGlyph
+from Glyph import getGlyphMaterial
 
 #
 # Code from here
 #
 
-def drawKey(average, ortho, text_material):
+def drawKey(average, key_type, ortho, text_material):
 
     # copy camera collection    
     cam_x = bpy.context.scene.camera.location[0]
@@ -38,7 +35,6 @@ def drawKey(average, ortho, text_material):
     atX = cam_x + 9.28
     atY =  cam_y + 4.5
     atZ =  1.4
-    temp = 30
     r = 0.5
     
     maxY = atY
@@ -48,25 +44,59 @@ def drawKey(average, ortho, text_material):
     bpy.context.view_layer.active_layer_collection = bpy.context.view_layer.layer_collection.children[-1]
 
     # loop    
-    for x in range(1,9) :    
-        name = "Temp" + str(temp)
+    if (key_type == "metTemp"):
+        v = 30
+        for x in range(1,9) :    
+            name = "Value" + str(v)
+            
+            glyphMat = getGlyphMaterial(v, key_type)
+            glyph = initGlyph(0.0, 10, (atX, atY, 0.1), r, v, glyphMat, name, True)
+            createGlyph( glyph, 0.0, 1.0, ortho, 1)    
+            
+            bpy.ops.object.text_add(location=(atX, atY, atZ));
+            txt = bpy.context.object;
+            txt.data.body = str(v);
+            txt.data.extrude = 0.02;
+            txt.data.size = 0.5;
+            txt.data.materials.append(text_material);
+            txt.data.align_x = 'RIGHT';
+            txt.data.align_y = 'CENTER';
+            bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY');
+            txt.location=(atX + 1.1, atY, atZ);
+            
+            atY =  atY - 1.355
+            v -= 5
+    elif (key_type == "covid19"):
+        v = 100    
+
+        text = [
+            "100+",
+            "<100",
+            " <75",
+            " <50",
+            " <25"
+        ]
         
-        glyph = initGlyph(0.0, 10, atX, atY, 0.1, r, temp, name, True)
-        createGlyph( glyph, 0.0, 1.0, ortho,1)    
-        
-        bpy.ops.object.text_add(location=(atX, atY, atZ));
-        txt = bpy.context.object;
-        txt.data.body = str(temp);
-        txt.data.extrude = 0.02;
-        txt.data.size = 0.5;
-        txt.data.materials.append(text_material);
-        txt.data.align_x = 'RIGHT';
-        txt.data.align_y = 'CENTER';
-        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY');
-        txt.location=(atX + 1.1, atY, atZ);
-        
-        atY =  atY - 1.355
-        temp -= 5
+        for x in range(1,6) :    
+            name = "Value" + str(v)
+            
+            glyphMat = getGlyphMaterial(v, key_type)
+            glyph = initGlyph(0.0, 10, (atX, atY, 0.1), r, v, glyphMat, name, True)
+            createGlyph( glyph, 0.0, 1.0, ortho, 1)    
+            
+            bpy.ops.object.text_add(location=(atX, atY, atZ));
+            txt = bpy.context.object;
+            txt.data.body = text[x-1];
+            txt.data.extrude = 0.02;
+            txt.data.size = 0.4;
+            txt.data.materials.append(text_material);
+            txt.data.align_x = 'RIGHT';
+            txt.data.align_y = 'CENTER';
+            bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY');
+            txt.location=(atX + 1.1, atY, atZ);
+            
+            atY =  atY - 1.8
+            v -= 25
         
     minY = atY + 0.2
     

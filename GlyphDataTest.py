@@ -29,6 +29,7 @@ from Material import makeEmissiveAlpha
 from Glyph import Glyph
 from Glyph import createGlyph
 from Glyph import initGlyph
+from Glyph import getGlyphMaterial
 
 from Key import drawKey
 
@@ -256,11 +257,10 @@ bpy.data.objects["Uncertainty.TXT"].data.materials[0] = axis_label_colour
 bpy.data.objects["KeyTitle.TXT"].data.materials[0] = axis_label_colour
 
 key_label = j_data["key_name"]
+key_type = j_data["key_type"]
 key_low = j_data["key_values"]["low_value"]
 key_high = j_data["key_values"]["high_value"]
-
-if 'value_key_label' in j_data:
-    value_key_label = j_data["value_key_label"]
+value_key_label = j_data["value_key_label"]
 
 key_low = key_low.replace(' ', '\n')
 key_high = key_high.replace(' ', '\n')
@@ -322,7 +322,7 @@ if background == "graph":
     drawXAxis(min_x, max_x, x_inc, j_data["x_axis_label"])
     drawYAxis(min_y, max_y, y_inc, j_data["y_axis_label"])
 
-drawKey(0.0, ortho, axis_value_colour)
+drawKey(0.0, key_type, ortho, axis_value_colour)
 
 if background == "map":
     bpy.context.window.scene = bpy.data.scenes['Scene']
@@ -356,15 +356,28 @@ for idx in range(0, len(values)) :
         d_y = (N + N_adj)
         
         if d_x > 500 or d_x < -500 or d_y > 500 or d_y < -500:
-            #not on tile, ignore
-            #print("glyph not on tile")
+            #print("glyph not on tile")     #not on tile, ignore
             continue
     else:
         d_x = start_x + ((lon - x_axis_values[0]) * (x_axis_length / (x_axis_values[len(x_axis_values)-1] - x_axis_values[0])))
         d_y = start_y + ((lat - y_axis_values[0]) * (y_axis_length / (y_axis_values[len(y_axis_values)-1] - y_axis_values[0])))
     
     d_uncertainty = float(datavalues["u"])
-    d_temperature = float(datavalues["v"])
+    d_value = float(datavalues["v"])
+    
+    if (key_type == "covid19"):
+        if (d_uncertainty > 500):
+            d_uncertainty = 0.84
+        elif (d_uncertainty > 400):
+            d_uncertainty = 0.7
+        elif (d_uncertainty > 300):
+            d_uncertainty = 0.56
+        elif (d_uncertainty > 200):
+            d_uncertainty = 0.42
+        elif (d_uncertainty > 100):
+            d_uncertainty = 0.28
+        elif (d_uncertainty > 0):
+            d_uncertainty = 0.14
     
     if 'r' in datavalues:
         d_risk = float(datavalues["r"])
@@ -375,8 +388,7 @@ for idx in range(0, len(values)) :
         else:
             risk_val = (d_risk - min_risk) / risk_range
     else:
-        #print ("> No risk data")
-        risk_val = 0.5
+        risk_val = 0.5      #print ("> No risk data")
     
     if background == "map":
         #glyph_scale = (cam_orth_scale / 1.5) * 0.25    
@@ -390,8 +402,10 @@ for idx in range(0, len(values)) :
         force = True
         height = 1.0
     
-    glyph = initGlyph(d_uncertainty, 1, d_x, d_y, height, scale, d_temperature, "data-glyph-"+str(idx), force) 
+    pos = (d_x, d_y, height)
+    name = "data-glyph-"+str(idx)
+    glyphMat = getGlyphMaterial(d_value, key_type)
+    glyph = initGlyph(d_uncertainty, 1, pos, scale, d_value, glyphMat, name, force) 
     createGlyph( glyph, minVariance, maxVariance, ortho, numGlyphs )
-
 
 #bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)

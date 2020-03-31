@@ -29,6 +29,32 @@ class Glyph:
         self.count = c
 
 #
+# Code to calculate glyph colour
+#
+def getGlyphMaterial(v, key_type):
+    colour = (0.0, 1.0, 0.0, 1.0)
+    
+    if (key_type == "metTemp"):
+        i = 0
+        while ( (i < len(metOfficeLimits)-1) and (v >  metOfficeLimits[i])):
+            i += 1
+        
+        colour = ( float(metOfficeColours[i][0])/255.0,float(metOfficeColours[i][1])/255.0,float(metOfficeColours[i][2])/255.0, 1.0 )
+    elif (key_type == "covid19"):
+        if (v >= 100):
+            colour = (1.0, 0.2, 0.0, 1.0)
+        elif (v >= 75):
+            colour = (0.9, 0.6, 0.0, 1.0)
+        elif (v >= 50):
+            colour = (1.0, 1.0, 0.0, 1.0)
+        elif (v >= 25):
+            colour = (0.6, 0.9, 0.0, 1.0)
+        else:
+            colour = (0.0, 1.0, 0.0, 1.0)
+    
+    return colour
+
+#
 # File Read Code
 #
 def fileReadVerts( fileName ):
@@ -83,12 +109,12 @@ def cylinder_between(x1, y1, z1, x2, y2, z2, r, gMaterial, name):
 #
 # function to calculate glyph height
 #
-def initGlyph( vnce, cnt, atX, atY, atZ, r, value, name, force = False ):
+def initGlyph( vnce, cnt, pos, r, value, diffuseColour, name, force = False ):
     
     #Calculate sensor height
     scene = bpy.context.scene
     
-    origin = ( atX, atY, 500)
+    origin = ( pos[0], pos[1], 500)
     direction = (0.0,0.0,-1.0)
     
     view_layer = scene.view_layers['View Layer']
@@ -98,19 +124,13 @@ def initGlyph( vnce, cnt, atX, atY, atZ, r, value, name, force = False ):
         print("not on model, igroring")
         return None 
     
-    atZ1 = result[1][2] + atZ
+    atZ1 = result[1][2] + pos[2]
     atZ2 = result[1][2]
     
     if (value is None):
         glyphValue=""
         mat = Mgrey
     else:
-        i = 0
-        while ( value >  metOfficeLimits[i] ):
-            i += 1
-        
-        diffuseColour = ( float(metOfficeColours[i][0])/255.0,float(metOfficeColours[i][1])/255.0,float(metOfficeColours[i][2])/255.0, 1.0 )
-        
         mat = makeFlatColor(diffuseColour, name + "-mat")
         mat = bpy.data.materials[name + "-mat"]
         
@@ -119,7 +139,7 @@ def initGlyph( vnce, cnt, atX, atY, atZ, r, value, name, force = False ):
         else:
             glyphValue="{:.1f}".format(float(value))
     
-    glyph = Glyph(atX, atY, atZ1, atZ2, r, mat, glyphValue, name, vnce, cnt)
+    glyph = Glyph(pos[0], pos[1], atZ1, atZ2, r, mat, glyphValue, name, vnce, cnt)
     return glyph
 
 #
