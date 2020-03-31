@@ -64,6 +64,10 @@
                             {
                                 "displayName": "Met Office Temperature Scale",
                                 "value" : "metTemp"
+                            },
+                            {
+                                "displayName": "COVID-19",
+                                "value" : "covid19"
                             }
                         ]
                     }

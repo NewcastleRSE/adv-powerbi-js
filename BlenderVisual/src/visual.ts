@@ -160,6 +160,7 @@ export class Visual implements IVisual {
                 // setup visualistion properties and settings
                 let json_data = {
                     'key_name': key_label,
+                    'key_type' : this.visualSettings.keyDisplaySettings.keyType,
                     'key_values': {
                         'high_value': this.visualSettings.keyDisplaySettings.keyHighValue,
                         'low_value': this.visualSettings.keyDisplaySettings.keyLowValue
