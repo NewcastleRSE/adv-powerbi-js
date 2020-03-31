@@ -50,7 +50,12 @@
                             }
                         ]
                     }
-                },
+                }
+            }
+        },
+        "keyDisplaySettings": {
+            "displayName": "Key Settings",
+            "properties": {
                 "keyType": {
                     "displayName": "Key Type",
                     "description": "Choose the colours and categories to be used by the visualisation.",
