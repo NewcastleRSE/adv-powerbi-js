@@ -50,6 +50,38 @@
                             }
                         ]
                     }
+                },
+                "glyphScale": {
+                    "displayName": "Glyph Scale",
+                    "description": "Manually set the size of the glyphs (default 1.0).",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "0.5",
+                                "displayName": "0.5"
+                            },
+                            {
+                                "value": "0.6",
+                                "displayName": "0.6"
+                            },
+                            {
+                                "value": "0.7",
+                                "displayName": "0.7"
+                            },
+                            {
+                                "value": "0.8",
+                                "displayName": "0.8"
+                            },
+                            {
+                                "value": "0.9",
+                                "displayName": "0.9"
+                            },
+                            {
+                                "value": "1.0",
+                                "displayName": "1.0"
+                            }
+                        ]
+                    }
                 }
             }
         },

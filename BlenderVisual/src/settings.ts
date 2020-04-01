@@ -30,6 +30,7 @@ import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 
 export class VisualDisplaySettings {
   public displayMode: string = "graph";
+  public glyphScale: number = 1.0;
 }
 export class KeyDisplaySettings {
   public keyType: string = "metTemp";

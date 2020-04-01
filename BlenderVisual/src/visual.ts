@@ -176,6 +176,7 @@ export class Visual implements IVisual {
                     'x_axis_label': x_axis_label,
                     'y_axis_label': y_axis_label,
                     'background': this.visualSettings.visualDisplaySettings.displayMode,
+                    'glyph_scale': this.visualSettings.visualDisplaySettings.glyphScale.toString(),
                     'data': []
                 }
 
