@@ -217,6 +217,7 @@ j_data = json.loads(argv[0])
 values = j_data["data"]
 
 background = j_data["background"]
+glyph_scale = float(j_data["glyph_scale"])
     
 ax_col = hextofloats(j_data['graph_settings']['axis_colour'], 1.0)
 axis_colour = makeEmissive(ax_col, 'AxisMaterial')
@@ -365,19 +366,17 @@ for idx in range(0, len(values)) :
     d_uncertainty = float(datavalues["u"])
     d_value = float(datavalues["v"])
     
-    if (key_type == "covid19"):
-        if (d_uncertainty > 500):
-            d_uncertainty = 0.84
-        elif (d_uncertainty > 400):
-            d_uncertainty = 0.7
-        elif (d_uncertainty > 300):
-            d_uncertainty = 0.56
-        elif (d_uncertainty > 200):
+    if (key_type == "covid19"):         #bodge for covid-19 data
+        if (d_uncertainty > 600):       #TODO automatically calculate uncertainty from range ...
+            d_uncertainty = 0.56        # ... and/or give user option to specifiy uncertainty ranges
+        elif (d_uncertainty > 600):
             d_uncertainty = 0.42
-        elif (d_uncertainty > 100):
+        elif (d_uncertainty > 400):
             d_uncertainty = 0.28
-        elif (d_uncertainty > 0):
+        elif (d_uncertainty > 200):
             d_uncertainty = 0.14
+        elif (d_uncertainty > 0):
+            d_uncertainty = 0.0
     
     if 'r' in datavalues:
         d_risk = float(datavalues["r"])
@@ -392,12 +391,12 @@ for idx in range(0, len(values)) :
     
     if background == "map":
         #glyph_scale = (cam_orth_scale / 1.5) * 0.25    
-        glyph_size = 10.0 #* glyph_scale
+        glyph_size = 10.0 * glyph_scale
         scale = glyph_size + (risk_val * glyph_size)
         force = False
         height = 100.0
     else:
-        glyph_size = 0.5
+        glyph_size = 0.5 * glyph_scale
         scale = glyph_size + (risk_val * glyph_size)
         force = True
         height = 1.0
