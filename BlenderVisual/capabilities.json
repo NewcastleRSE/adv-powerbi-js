@@ -57,6 +57,22 @@
                     "type": {
                         "enumeration": [
                             {
+                                "value": "0.1",
+                                "displayName": "0.1"
+                            },
+                            {
+                                "value": "0.2",
+                                "displayName": "0.2"
+                            },
+                            {
+                                "value": "0.3",
+                                "displayName": "0.3"
+                            },
+                            {
+                                "value": "0.4",
+                                "displayName": "0.4"
+                            },
+                            {
                                 "value": "0.5",
                                 "displayName": "0.5"
                             },
