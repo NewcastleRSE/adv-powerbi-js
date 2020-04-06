@@ -31,7 +31,7 @@ class Glyph:
 #
 # Code to calculate glyph colour
 #
-def getGlyphMaterial(v, key_type):
+def getGlyphMaterial(v, max_v, key_type):
     colour = (0.0, 1.0, 0.0, 1.0)
     
     if (key_type == "metTemp"):
@@ -40,14 +40,16 @@ def getGlyphMaterial(v, key_type):
             i += 1
         
         colour = ( float(metOfficeColours[i][0])/255.0,float(metOfficeColours[i][1])/255.0,float(metOfficeColours[i][2])/255.0, 1.0 )
-    elif (key_type == "covid19"):
-        if (v >= 100):
+    elif (key_type == "covid19"):   
+        v_diff = max_v / 5
+    
+        if (v >= max_v - v_diff):
             colour = (1.0, 0.2, 0.0, 1.0)
-        elif (v >= 75):
+        elif (v >= max_v - (v_diff*2)):
             colour = (0.9, 0.6, 0.0, 1.0)
-        elif (v >= 50):
+        elif (v >= max_v - (v_diff*3)):
             colour = (1.0, 1.0, 0.0, 1.0)
-        elif (v >= 25):
+        elif (v >= max_v - (v_diff*4)):
             colour = (0.6, 0.9, 0.0, 1.0)
         else:
             colour = (0.0, 1.0, 0.0, 1.0)

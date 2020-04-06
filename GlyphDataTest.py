@@ -271,10 +271,15 @@ bpy.data.objects["Least.U.TXT"].data.body = key_low
 bpy.data.objects["Most.U.TXT"].data.body = key_high
 bpy.data.objects["KeyTitle.TXT"].data.body = value_key_label
 
-# ---------------------------------------------------------------
+# --------------------------------------------------------------- Initial Loop through the data
 
 min_risk = None
 max_risk = None
+
+max_value = None
+
+min_uncertainty = None
+max_uncertainty = None
 
 for idx in range(0, len(values)) :    
     datavalues = values[idx]
@@ -305,6 +310,16 @@ for idx in range(0, len(values)) :
     if (max_y == None or d_y > max_y):
         max_y = d_y
     
+    d_v = float(datavalues["v"])
+    if (max_value == None or max_value < d_v):
+        max_value = d_v
+    
+    d_u = float(datavalues["u"])
+    if (max_uncertainty == None or max_uncertainty < d_v):
+        max_uncertainty = d_u
+    if (min_uncertainty == None or min_uncertainty > d_v):
+        min_uncertainty = d_u
+    
     if 'r' in datavalues:
         d_r = float(datavalues["r"])
         if (min_risk == None or min_risk > d_r):
@@ -323,7 +338,7 @@ if background == "graph":
     drawXAxis(min_x, max_x, x_inc, j_data["x_axis_label"])
     drawYAxis(min_y, max_y, y_inc, j_data["y_axis_label"])
 
-drawKey(0.0, key_type, ortho, axis_value_colour)
+drawKey(0.0, key_type, max_value, ortho, axis_value_colour)
 
 if background == "map":
     bpy.context.window.scene = bpy.data.scenes['Scene']
@@ -367,16 +382,23 @@ for idx in range(0, len(values)) :
     d_value = float(datavalues["v"])
     
     if (key_type == "covid19"):         #bodge for covid-19 data
-        if (d_uncertainty > 600):       #TODO automatically calculate uncertainty from range ...
-            d_uncertainty = 0.56        # ... and/or give user option to specifiy uncertainty ranges
-        elif (d_uncertainty > 600):
+                                        #TODO automatically calculate uncertainty from range (DONE)
+                                        # ... and/or give user option to specifiy uncertainty ranges
+                                        
+        u_diff = (max_uncertainty-min_uncertainty) / 4
+        
+        if (d_uncertainty > (max_uncertainty - u_diff)):       
+            d_uncertainty = 0.56        
+        elif (d_uncertainty > (max_uncertainty - u_diff*2)):
             d_uncertainty = 0.42
-        elif (d_uncertainty > 400):
+        elif (d_uncertainty > (max_uncertainty - u_diff*3)):
             d_uncertainty = 0.28
-        elif (d_uncertainty > 200):
+        elif (d_uncertainty > (max_uncertainty - u_diff*4)):
             d_uncertainty = 0.14
         elif (d_uncertainty > 0):
             d_uncertainty = 0.0
+        else:
+            d_uncertainty = -1.0
     
     if 'r' in datavalues:
         d_risk = float(datavalues["r"])
@@ -403,7 +425,7 @@ for idx in range(0, len(values)) :
     
     pos = (d_x, d_y, height)
     name = "data-glyph-"+str(idx)
-    glyphMat = getGlyphMaterial(d_value, key_type)
+    glyphMat = getGlyphMaterial(d_value, max_value, key_type)
     glyph = initGlyph(d_uncertainty, 1, pos, scale, d_value, glyphMat, name, force) 
     createGlyph( glyph, minVariance, maxVariance, ortho, numGlyphs )
 
